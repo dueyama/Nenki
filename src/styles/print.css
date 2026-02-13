@@ -1,0 +1,38 @@
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .control-panel,
+  .screen-only {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  .preview-frame {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .a4-page {
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}

@@ -1,0 +1,232 @@
+:root {
+  --ink: #1d1b15;
+  --paper: #fdfcf9;
+  --line: #ddd6c6;
+  --warning: #8b3a2e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+  background:
+    radial-gradient(circle at 15% 10%, #f2eee3 0, transparent 45%),
+    radial-gradient(circle at 80% 20%, #e7edf0 0, transparent 40%),
+    linear-gradient(120deg, #ece8de, #f7f6f2 45%, #e7ecef);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) 1fr;
+  gap: 24px;
+  padding: 24px;
+  align-items: start;
+}
+
+.control-panel {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 16px 32px rgba(40, 36, 24, 0.08);
+}
+
+.control-panel h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.3rem;
+}
+
+.helper {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 0.92rem;
+  color: #5e5b52;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.field label {
+  font-size: 0.92rem;
+}
+
+.field input {
+  width: 100%;
+  border: 1px solid #c8c0ae;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  background: #fffefb;
+}
+
+.field input:focus {
+  outline: 2px solid #9b8d6b;
+  outline-offset: 1px;
+}
+
+.print-button {
+  margin-top: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #fff;
+  background: #2f5d78;
+  cursor: pointer;
+  font-size: 0.98rem;
+}
+
+.print-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.preview-panel h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.preview-frame {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.a4-page {
+  width: 210mm;
+  height: 297mm;
+  max-width: 100%;
+  background: var(--paper);
+  border: 1px solid #d3cdc0;
+  box-shadow: 0 20px 44px rgba(33, 30, 23, 0.12);
+  margin: 0 auto;
+  padding: 14mm 12mm;
+}
+
+.lower-block {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  gap: 11mm;
+  height: 100%;
+}
+
+.column {
+  min-height: 100%;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.08em;
+}
+
+.person-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+}
+
+.memorial-columns {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8mm;
+}
+
+.memorial-pair {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 3.2mm;
+}
+
+.kaimyo,
+.zokumyo,
+.death-line,
+.age-line,
+.zokumyo-label,
+.rank,
+.year,
+.temple-column p {
+  margin: 0;
+}
+
+.kaimyo {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.zokumyo {
+  font-size: 1.2rem;
+}
+
+.death-line,
+.age-line {
+  font-size: 1rem;
+}
+
+.zokumyo-label {
+  font-size: 0.9rem;
+  color: #5e5b52;
+}
+
+.rank {
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.year {
+  font-size: 1.35rem;
+}
+
+.temple-column {
+  display: flex;
+  align-items: flex-end;
+}
+
+.temple-column p {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: #69645b;
+  text-align: center;
+  padding: 20px;
+}
+
+.warning {
+  margin-bottom: 0;
+  color: var(--warning);
+  font-weight: 700;
+}
+
+@media (max-width: 1120px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .a4-page {
+    width: 100%;
+    min-height: 297mm;
+    height: auto;
+  }
+}
