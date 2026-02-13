@@ -20,14 +20,13 @@ export function MemorialForm({ value, onChange, onPrint, canPrint }: MemorialFor
       <p className="helper">入力内容は右側プレビューへ即時反映されます。</p>
 
       <div className="field">
-        <label htmlFor="kaimyo">戒名</label>
+        <label htmlFor="homyo">法名（不明の場合は空欄）</label>
         <input
-          id="kaimyo"
+          id="homyo"
           type="text"
-          value={value.kaimyo}
-          onChange={(event) => updateField("kaimyo", event.target.value)}
-          placeholder="例: 広智院釋俊幸"
-          required
+          value={value.homyo}
+          onChange={(event) => updateField("homyo", event.target.value)}
+          placeholder="例: 浄泉院釋太郎"
         />
       </div>
 
@@ -38,7 +37,7 @@ export function MemorialForm({ value, onChange, onPrint, canPrint }: MemorialFor
           type="text"
           value={value.zokumyo}
           onChange={(event) => updateField("zokumyo", event.target.value)}
-          placeholder="例: 明智 俊夫"
+          placeholder="例: 上山太郎"
           required
         />
       </div>
@@ -67,20 +66,8 @@ export function MemorialForm({ value, onChange, onPrint, canPrint }: MemorialFor
         />
       </div>
 
-      <div className="field">
-        <label htmlFor="templeName">寺院名</label>
-        <input
-          id="templeName"
-          type="text"
-          value={value.templeName}
-          onChange={(event) => updateField("templeName", event.target.value)}
-          placeholder="例: 浄泉寺"
-          required
-        />
-      </div>
-
       <button className="print-button screen-only" type="button" onClick={onPrint} disabled={!canPrint}>
-        プレビューを印刷（PDF保存）
+        印刷ダイアログを開く（PDF保存）
       </button>
     </aside>
   );

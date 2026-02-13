@@ -8,27 +8,23 @@ import { buildDocumentVM } from "@/lib/memorial-calc";
 import { DeceasedInput, MemorialDocumentViewModel } from "@/types/memorial";
 
 const INITIAL_INPUT: DeceasedInput = {
-  kaimyo: "広智院釋俊幸",
-  zokumyo: "明智 俊夫",
-  deathDateISO: "1994-02-12",
-  ageAtDeath: 69,
-  templeName: "浄泉寺"
+  homyo: "浄泉院釋太郎",
+  zokumyo: "上山太郎",
+  deathDateISO: "1999-11-29",
+  ageAtDeath: 99
 };
 
 function hasOverflowRisk(input: DeceasedInput): boolean {
   return (
-    input.kaimyo.trim().length > 20 ||
+    input.homyo.trim().length > 16 ||
     input.zokumyo.trim().length > 14 ||
-    input.templeName.trim().length > 12 ||
-    input.kaimyo.trim().length + input.zokumyo.trim().length + input.templeName.trim().length > 38
+    input.homyo.trim().length + input.zokumyo.trim().length > 24
   );
 }
 
 function hasRequiredInput(input: DeceasedInput): boolean {
   return Boolean(
-    input.kaimyo.trim() &&
-      input.zokumyo.trim() &&
-      input.templeName.trim() &&
+    input.zokumyo.trim() &&
       input.deathDateISO.trim() &&
       Number.isFinite(input.ageAtDeath) &&
       input.ageAtDeath > 0
@@ -65,7 +61,7 @@ export default function HomePage() {
       <MemorialForm value={input} onChange={setInput} onPrint={handlePrint} canPrint={canPrint} />
 
       <section className="preview-panel">
-        <h2 className="screen-only">A4縦 プレビュー（下段ブロック）</h2>
+        <h2 className="screen-only">A4縦 プレビュー（上下ブロック）</h2>
         <MemorialPreview vm={vm} errorMessage={errorMessage} overflowWarning={overflowWarning} />
       </section>
     </main>

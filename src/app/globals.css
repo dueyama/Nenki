@@ -119,16 +119,32 @@ body {
   padding: 14mm 12mm;
 }
 
-.lower-block {
+.document-blocks {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: space-between;
-  gap: 11mm;
+  flex-direction: column;
+  gap: 8mm;
   height: 100%;
 }
 
+.upper-block,
+.lower-block {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 9mm;
+  min-height: 0;
+  flex: 1;
+  padding-top: 10mm;
+}
+
+.upper-block {
+  padding-bottom: 4mm;
+  border-bottom: 1px solid #e2ddcf;
+}
+
 .column {
-  min-height: 100%;
+  min-height: 0;
 }
 
 .vertical-text {
@@ -139,69 +155,106 @@ body {
 
 .person-column {
   display: flex;
-  flex-direction: column;
-  gap: 6mm;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: 3.5mm;
+}
+
+.kijitsu-columns {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: 5mm;
+}
+
+.kijitsu-col {
+  display: grid;
+  grid-template-rows: 46mm auto;
+  align-items: start;
+  row-gap: 2.8mm;
 }
 
 .memorial-columns {
   display: flex;
   flex-direction: row-reverse;
-  gap: 8mm;
+  align-items: flex-start;
+  gap: 6mm;
 }
 
-.memorial-pair {
-  display: flex;
-  flex-direction: row-reverse;
-  gap: 3.2mm;
+.memorial-col {
+  display: grid;
+  grid-template-rows: 24mm auto;
+  align-items: start;
+  row-gap: 10mm;
 }
 
-.kaimyo,
+.homyo,
 .zokumyo,
 .death-line,
 .age-line,
-.zokumyo-label,
+.kijitsu-label,
+.kijitsu-date,
 .rank,
-.year,
-.temple-column p {
+.year {
   margin: 0;
 }
 
-.kaimyo {
-  font-size: 1.8rem;
+.homyo {
+  font-size: 2.25rem;
   font-weight: 700;
+  white-space: nowrap;
+  inline-size: max-content;
 }
 
 .zokumyo {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  inline-size: max-content;
 }
 
-.death-line,
+.death-line {
+  font-size: 1.05rem;
+}
+
 .age-line {
-  font-size: 1rem;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  inline-size: max-content;
 }
 
-.zokumyo-label {
-  font-size: 0.9rem;
-  color: #5e5b52;
+.zokumyo-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4mm;
+  margin-top: 25mm;
+}
+
+.kijitsu-label {
+  font-size: 1.14rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.kijitsu-sub {
+  font-size: 0.78em;
+}
+
+.kijitsu-date {
+  font-size: 1.02rem;
+  color: #302e27;
+  white-space: nowrap;
 }
 
 .rank {
-  font-size: 1.55rem;
+  font-size: 1.28rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .year {
-  font-size: 1.35rem;
-}
-
-.temple-column {
-  display: flex;
-  align-items: flex-end;
-}
-
-.temple-column p {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  white-space: nowrap;
 }
 
 .placeholder {

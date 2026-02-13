@@ -1,3 +1,4 @@
+import { toKanjiNumber, toZenkakuDigits } from "@/lib/memorial-calc";
 import { MemorialDocumentViewModel } from "@/types/memorial";
 
 type MemorialPreviewProps = {
@@ -7,30 +8,73 @@ type MemorialPreviewProps = {
 };
 
 export function MemorialPreview({ vm, errorMessage, overflowWarning }: MemorialPreviewProps) {
+  const renderKijitsuLabel = (label: string) => {
+    if (label === "満中陰（四十九日）") {
+      return (
+        <>
+          満中陰
+          <br />
+          <span className="kijitsu-sub">（四十九日）</span>
+        </>
+      );
+    }
+    return label;
+  };
+
+  const renderPersonColumn = (viewModel: MemorialDocumentViewModel) => (
+    <section className="column person-column">
+      {(() => {
+        const homyo = viewModel.deceased.homyo.trim();
+        const showZokumyoLine = homyo.length > 0;
+        const displayName = showZokumyoLine ? homyo : viewModel.deceased.zokumyo;
+
+        return (
+          <>
+            <p className="death-line vertical-text">{viewModel.deathDateWareki}往生</p>
+            <p className="homyo vertical-text">{displayName}</p>
+            <div className="zokumyo-block">
+              {showZokumyoLine ? (
+                <p className="zokumyo vertical-text">俗名　{viewModel.deceased.zokumyo}</p>
+              ) : (
+                <p className="zokumyo zokumyo-empty vertical-text">　</p>
+              )}
+              <p className="age-line vertical-text">享年{toKanjiNumber(viewModel.deceased.ageAtDeath)}歳</p>
+            </div>
+          </>
+        );
+      })()}
+    </section>
+  );
+
   return (
     <section className="preview-frame">
       <div className="a4-page">
         {vm ? (
-          <article className="lower-block">
-            <section className="column person-column vertical-text">
-              <p className="death-line">{vm.deathDateWareki}往生</p>
-              <p className="kaimyo">{vm.deceased.kaimyo}</p>
-              <p className="zokumyo-label">俗名</p>
-              <p className="zokumyo">{vm.deceased.zokumyo}</p>
-              <p className="age-line">享年 {vm.deceased.ageAtDeath}歳</p>
+          <article className="document-blocks">
+            <section className="upper-block">
+              {renderPersonColumn(vm)}
+              <section className="column kijitsu-columns">
+                {vm.kijitsuRows.map((row) => (
+                  <div className="kijitsu-col" key={row.label}>
+                    <p className="kijitsu-label vertical-text">{renderKijitsuLabel(row.label)}</p>
+                    <p className="kijitsu-date vertical-text">
+                      {row.monthDay}（{row.weekday}）
+                    </p>
+                  </div>
+                ))}
+              </section>
             </section>
 
-            <section className="column memorial-columns">
-              {vm.rows.map((row) => (
-                <div className="memorial-pair" key={row.rank}>
-                  <p className="rank vertical-text">{row.label}</p>
-                  <p className="year vertical-text">{row.yearAD}年</p>
-                </div>
-              ))}
-            </section>
-
-            <section className="column temple-column vertical-text">
-              <p>{vm.deceased.templeName}</p>
+            <section className="lower-block">
+              {renderPersonColumn(vm)}
+              <section className="column memorial-columns">
+                {vm.rows.map((row) => (
+                  <div className="memorial-col" key={row.rank}>
+                    <p className="rank vertical-text">{row.label}</p>
+                    <p className="year vertical-text">{toZenkakuDigits(row.yearAD)}年</p>
+                  </div>
+                ))}
+              </section>
             </section>
           </article>
         ) : (

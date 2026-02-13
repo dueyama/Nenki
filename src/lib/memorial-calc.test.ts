@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildMemorialRows, toWarekiDate } from "./memorial-calc";
+import { buildKijitsuRows, buildMemorialRows, toWarekiDate } from "./memorial-calc";
 
 describe("buildMemorialRows", () => {
   it("calculates the expected AD years from death date", () => {
@@ -30,8 +30,24 @@ describe("buildMemorialRows", () => {
 
 describe("toWarekiDate", () => {
   it("supports Reiwa and Heisei boundary dates", () => {
-    expect(toWarekiDate("2019-05-01")).toBe("令和元年5月1日");
-    expect(toWarekiDate("1989-01-08")).toBe("平成元年1月8日");
-    expect(toWarekiDate("1989-01-07")).toBe("昭和64年1月7日");
+    expect(toWarekiDate("2019-05-01")).toBe("令和元年五月一日");
+    expect(toWarekiDate("1989-01-08")).toBe("平成元年一月八日");
+    expect(toWarekiDate("1989-01-07")).toBe("昭和六十四年一月七日");
+  });
+});
+
+describe("buildKijitsuRows", () => {
+  it("calculates the expected weekly memorial schedule from death date", () => {
+    const rows = buildKijitsuRows("1994-02-12");
+    expect(rows).toEqual([
+      { label: "初七日", monthDay: "二月十八日", weekday: "金" },
+      { label: "二七日", monthDay: "二月二十五日", weekday: "金" },
+      { label: "三七日", monthDay: "三月四日", weekday: "金" },
+      { label: "四七日", monthDay: "三月十一日", weekday: "金" },
+      { label: "五七日", monthDay: "三月十八日", weekday: "金" },
+      { label: "六七日", monthDay: "三月二十五日", weekday: "金" },
+      { label: "満中陰（四十九日）", monthDay: "四月一日", weekday: "金" },
+      { label: "百ヶ日", monthDay: "五月二十二日", weekday: "日" }
+    ]);
   });
 });

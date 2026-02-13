@@ -1,4 +1,10 @@
-import { DeceasedInput, MemorialDocumentViewModel, MemorialRank, MemorialRow } from "@/types/memorial";
+import {
+  DeceasedInput,
+  KijitsuRow,
+  MemorialDocumentViewModel,
+  MemorialRank,
+  MemorialRow
+} from "@/types/memorial";
 
 type ParsedDate = {
   year: number;
@@ -7,6 +13,17 @@ type ParsedDate = {
 };
 
 const MEMORIAL_RANKS: MemorialRank[] = [1, 3, 7, 13, 17, 25, 33, 50];
+const KIJITSU_STEPS = [
+  { label: "初七日", offsetDays: 6 },
+  { label: "二七日", offsetDays: 13 },
+  { label: "三七日", offsetDays: 20 },
+  { label: "四七日", offsetDays: 27 },
+  { label: "五七日", offsetDays: 34 },
+  { label: "六七日", offsetDays: 41 },
+  { label: "満中陰（四十九日）", offsetDays: 48 },
+  { label: "百ヶ日", offsetDays: 99 }
+] as const;
+const WEEKDAYS_JA = ["日", "月", "火", "水", "木", "金", "土"] as const;
 
 const ERA_STARTS = [
   { name: "令和", start: { year: 2019, month: 5, day: 1 } },
@@ -29,26 +46,35 @@ const KANJI_DIGITS: Record<number, string> = {
   9: "九"
 };
 
-function toKanjiNumber(value: number): string {
+export function toKanjiNumber(value: number): string {
   if (!Number.isInteger(value) || value <= 0) {
     return String(value);
   }
-  if (value < 10) {
-    return KANJI_DIGITS[value];
+
+  if (value > 9999) {
+    return String(value);
   }
-  if (value === 10) {
-    return "十";
-  }
-  if (value < 20) {
-    return `十${KANJI_DIGITS[value - 10]}`;
-  }
-  if (value < 100) {
-    const tens = Math.floor(value / 10);
-    const ones = value % 10;
-    const tensText = `${KANJI_DIGITS[tens]}十`;
-    return `${tensText}${KANJI_DIGITS[ones]}`;
-  }
-  return String(value);
+
+  const thousands = Math.floor(value / 1000);
+  const hundreds = Math.floor((value % 1000) / 100);
+  const tens = Math.floor((value % 100) / 10);
+  const ones = value % 10;
+
+  const withUnit = (digit: number, unit: string) => {
+    if (digit === 0) {
+      return "";
+    }
+    if (digit === 1) {
+      return unit;
+    }
+    return `${KANJI_DIGITS[digit]}${unit}`;
+  };
+
+  return `${withUnit(thousands, "千")}${withUnit(hundreds, "百")}${withUnit(tens, "十")}${KANJI_DIGITS[ones]}`;
+}
+
+export function toZenkakuDigits(value: number | string): string {
+  return String(value).replace(/[0-9]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) + 0xfee0));
 }
 
 function compareDate(a: ParsedDate, b: ParsedDate): number {
@@ -95,6 +121,38 @@ function toOffsetYear(rank: MemorialRank): number {
   return rank === 1 ? 1 : rank - 1;
 }
 
+function toUTCDate(parsed: ParsedDate): Date {
+  return new Date(Date.UTC(parsed.year, parsed.month - 1, parsed.day));
+}
+
+function addUTCDateDays(date: Date, days: number): Date {
+  const next = new Date(date);
+  next.setUTCDate(next.getUTCDate() + days);
+  return next;
+}
+
+function formatMonthDay(date: Date): string {
+  const month = date.getUTCMonth() + 1;
+  const day = date.getUTCDate();
+  return `${toKanjiNumber(month)}月${toKanjiNumber(day)}日`;
+}
+
+export function buildKijitsuRows(deathDateISO: string): KijitsuRow[] {
+  const parsed = parseISODate(deathDateISO);
+  const deathDate = toUTCDate(parsed);
+
+  return KIJITSU_STEPS.map((step) => {
+    const targetDate = addUTCDateDays(deathDate, step.offsetDays);
+    const weekday = WEEKDAYS_JA[targetDate.getUTCDay()];
+
+    return {
+      label: step.label,
+      monthDay: formatMonthDay(targetDate),
+      weekday
+    };
+  });
+}
+
 export function buildMemorialRows(deathDateISO: string): MemorialRow[] {
   const { year } = parseISODate(deathDateISO);
 
@@ -114,21 +172,20 @@ export function toWarekiDate(deathDateISO: string): string {
   }
 
   const yearInEra = parsed.year - era.start.year + 1;
-  const eraYearText = yearInEra === 1 ? "元" : String(yearInEra);
-  return `${era.name}${eraYearText}年${parsed.month}月${parsed.day}日`;
+  const eraYearText = yearInEra === 1 ? "元" : toKanjiNumber(yearInEra);
+  return `${era.name}${eraYearText}年${toKanjiNumber(parsed.month)}月${toKanjiNumber(parsed.day)}日`;
 }
 
 export function buildDocumentVM(input: DeceasedInput): MemorialDocumentViewModel {
   const normalized: DeceasedInput = {
-    kaimyo: input.kaimyo.trim(),
+    homyo: input.homyo.trim(),
     zokumyo: input.zokumyo.trim(),
     deathDateISO: input.deathDateISO.trim(),
-    ageAtDeath: input.ageAtDeath,
-    templeName: input.templeName.trim()
+    ageAtDeath: input.ageAtDeath
   };
 
-  if (!normalized.kaimyo || !normalized.zokumyo || !normalized.templeName) {
-    throw new Error("戒名・俗名・寺院名は必須です。");
+  if (!normalized.zokumyo) {
+    throw new Error("俗名は必須です。");
   }
   if (!Number.isInteger(normalized.ageAtDeath) || normalized.ageAtDeath <= 0) {
     throw new Error("享年は1以上の整数で入力してください。");
@@ -137,6 +194,7 @@ export function buildDocumentVM(input: DeceasedInput): MemorialDocumentViewModel
   return {
     deceased: normalized,
     deathDateWareki: toWarekiDate(normalized.deathDateISO),
+    kijitsuRows: buildKijitsuRows(normalized.deathDateISO),
     rows: buildMemorialRows(normalized.deathDateISO)
   };
 }
