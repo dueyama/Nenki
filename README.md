@@ -1,6 +1,6 @@
-# Nenki PDF App
+# 中陰・年回表 PDF App
 
-A4縦・縦書きの年回忌表（上段: 初七日〜百ヶ日 / 下段: 一周忌〜五十回忌）をWebプレビューし、ブラウザ印刷でPDF保存する `Next.js + TypeScript` アプリです。
+A4縦・縦書きの中陰・年回表（上段: 初七日〜百ヶ日 / 下段: 一周忌〜五十回忌）をWebプレビューし、ブラウザ印刷でPDF保存する `Next.js + TypeScript` アプリです。
 
 ## Local Setup
 

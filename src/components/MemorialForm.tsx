@@ -16,7 +16,7 @@ export function MemorialForm({ value, onChange, onPrint, canPrint }: MemorialFor
 
   return (
     <aside className="control-panel">
-      <h1>年回忌 PDF 生成</h1>
+      <h1>中陰・年回表 生成</h1>
       <p className="helper">入力内容は右側プレビューへ即時反映されます。</p>
 
       <div className="field">
