@@ -45,6 +45,7 @@
   .a4-page {
     width: 198mm !important;
     height: 285mm !important;
+    min-height: 0 !important;
     margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
